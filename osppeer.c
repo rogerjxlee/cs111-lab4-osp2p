@@ -35,7 +35,9 @@ static int listen_port;
  * a bounded buffer that simplifies reading from and writing to peers.
  */
 
-#define TASKBUFSIZ	4096	// Size of task_t::buf
+#define TASKBUFSIZ	40960	// Size of task_t::buf
+
+//#define TASKBUFSIZ	4096	// Size of task_t::buf
 #define FILENAMESIZ	256	// Size of task_t::filename
 
 typedef enum tasktype {		// Which type of connection is this?
@@ -142,6 +144,11 @@ static void task_free(task_t *t)
  * A bounded buffer for storing network data on its way into or out of
  * the application layer.
  */
+
+///////////////////////////////////////////////////////////////////
+//EXERCISE 2B
+#define MAXFILESIZE 1048576 //set max file size to 1 MiB
+//ENDCODE//////////////////////////////////////////////////////////
 
 typedef enum taskbufresult {		// Status of a read or write attempt.
 	TBUF_ERROR = -1,		// => Error; close the connection.
@@ -583,6 +590,19 @@ static void task_download(task_t *t, task_t *tracker_task)
 			error("* Disk write error");
 			goto try_again;
 		}
+    
+
+    ////////////////////////////////////////////////////////
+    //EXERCISE 2B
+    //ensuring that no single peer is hogging all the download
+    if (t->total_written > MAXFILESIZE)
+    {
+      error("TOO MUCH TOTAL DATA DOWNLOADED");
+      goto try_again;
+    }
+    //END CODE/////////////////////////////////////////////////
+
+    
 	}
 
 	// Empty files are usually a symptom of some error.
@@ -655,6 +675,17 @@ static void task_upload(task_t *t)
 			   || (t->tail && t->buf[t->tail-1] == '\n'))
 			break;
 	}
+  
+  ///////////////////////////////////////////////////////
+  //CODE FOR 2B
+  //to ensure filename is not too long, consider GET OSP2P, and the 
+  //spaces in between along with the null byte
+  if(strlen(t->buf) > FILENAMESIZ + 12)
+  {
+    error("ERROR: Filename too long! Potential threat found\n");
+    goto exit;
+  }
+  //END CODE////////////////////////////////////////////
 
 	assert(t->head == 0);
 	if (osp2p_snscanf(t->buf, t->tail, "GET %s OSP2P\n", t->filename) < 0) {
@@ -663,6 +694,7 @@ static void task_upload(task_t *t)
 	}
 	t->head = t->tail = 0;
 
+<<<<<<< HEAD
   // EXERCISE 3: Evil mode will spam the downloader with junk information. 
   
   if(evil_mode != 0) {
@@ -670,6 +702,28 @@ static void task_upload(task_t *t)
       osp2p_writef(t->peer_fd, "SPAM SPAM SPAM SPAM SPAM SPAM SPAM SPAM");
   }
     
+=======
+  //////////////////////////////////////////////////////////////////
+  //EXERCISE 2B CONTINUED
+  //check to make sure the filename itself is not too long
+  if (strlen (t->filename) > FILENAMESIZ)
+  {    
+    error("ERROR: Filename too long! Potential threat found\n");
+    goto exit;
+  }
+  //now we must make sure that no peer is attempting to download
+  //from the wrong directory
+  int i;
+  for (i = 0; i < FILENAMESIZ && t->filename[i] != '\0'; i++)
+  {
+    if (t->filename[i] == '/')
+    {
+      error("Peer is attempting to download from the wrong directory\n");
+      goto exit;
+    }
+  }
+
+>>>>>>> e288c3ebd64db8a37eb14e6a3fdf3442df55fe7b
 
 	t->disk_fd = open(t->filename, O_RDONLY);
 	if (t->disk_fd == -1) {
