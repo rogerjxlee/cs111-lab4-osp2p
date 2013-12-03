@@ -590,7 +590,7 @@ static void task_download(task_t *t, task_t *tracker_task)
     //ensuring that no single peer is hogging all the download
     if (t->total_written > MAXFILESIZE)
     {
-      error("TOO MUCH TOTAL DATA DOWNLOADED");
+      error("TOO MUCH TOTAL DATA DOWNLOADED\n");
       goto try_again;
     }
     //END CODE/////////////////////////////////////////////////
@@ -706,6 +706,7 @@ static void task_upload(task_t *t)
       goto exit;
     }
   }
+  /////////////////END CODE/////////////////////////////////////////
 
 
 	t->disk_fd = open(t->filename, O_RDONLY);
