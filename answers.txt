@@ -34,7 +34,9 @@ that it encounters.
 #    triggered a buffer overrun bug?  (~1-3 sentences each)
 
 Filenames longer than FILENAMESIZ-1 overrun the filename buffer. Fixed by
-checking the
+making sure that when we are copying the file name string, we do not copy 
+more than FILENAMESIZ. Also we must null terminate the file name in case of
+overflow to ensure proper handling of the string.
 
 # EXERCISE 2B: What other robustness problems did you fix?  (~1-3 sentences
 #    each)
