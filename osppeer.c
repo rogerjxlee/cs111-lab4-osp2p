@@ -476,7 +476,12 @@ task_t *start_download(task_t *tracker_task, const char *filename)
 		error("* Error while allocating task");
 		goto exit;
 	}
-  
+ 
+  // EXERCISE 2A: Prevent overflow of the filename buffer by limiting the
+  //  amount of characters allowed to be copied into the buffer.
+  //  Additionally terminate the buffer with a null byte in case of overflow
+  //  to prevent improper handling of strings.
+ 
 	strncpy(t->filename, filename, FILENAMESIZ);
   t->filename[FILENAMESIZ-1] = '\0';
 
@@ -763,6 +768,7 @@ int main(int argc, char *argv[])
 	// First, download files named on command line.
 
   // EXERCISE 1: Parallelization through forking
+
   pid_t p;
 
 	for (; argc > 1; argc--, argv++) {
