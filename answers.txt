@@ -34,31 +34,24 @@ that it encounters.
 #    triggered a buffer overrun bug?  (~1-3 sentences each)
 
 Filenames longer than FILENAMESIZ-1 overrun the filename buffer. Fixed by
-making sure that when we are copying the file name string, we do not copy 
-more than FILENAMESIZ. Also we must null terminate the file name in case of
-overflow to ensure proper handling of the string.
+throwing an error when buffer overflow is detected and then exiting. 
 
 # EXERCISE 2B: What other robustness problems did you fix?  (~1-3 sentences
 #    each)
 
-<<<<<<< HEAD
+We made sure to account for various robustness problems such as:
 
+Checking if the GET requests were too long, including the space needed for GET,
+filename, and OSP2P.
 
-=======
-We made sure to account for numerous things such as:
-
-checking if the filename was too long, including the space needed for GET
-and OSP2P.
-
-stopping a peer from downloading from an invalid director by detecting 
+Stopping a peer from downloading from an invalid directory by detecting 
 if there was a '/' in the filename.
 
-accounting for large numbers of peers by increasing the buffer size 
+Accounting for large numbers of peers by increasing the buffer size 
 by 10 times in order to avoid unexpectedly disconnecting from the tracker
 
-making sure that no peer is downloading too much from the files to
-avoid monopolizing other peer's resources
->>>>>>> e288c3ebd64db8a37eb14e6a3fdf3442df55fe7b
+Making sure that no peer is uploading too much with a limit to avoid 
+monopolizing other peer's resources
 
 # EXERCISE 3: Describe the attacks you implemented for "evil mode".  Why
 #    are they attacks?  (~3-10 sentences each)
