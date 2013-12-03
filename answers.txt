@@ -25,8 +25,16 @@ Email: ashihe828@gmail.com
 # EXERCISE 1: What method you used to make your peer download and upload
 #    files in parallel?  (~1-3 sentences)
 
+We achieved parallelization by forking before each peer download and upload.
+The child processes executed their specififed download/upload task and then
+exited. The parent process continues forking for each download/upload task
+that it encounters. 
+
 # EXERCISE 2A: What conditions did you find and fix that would have
 #    triggered a buffer overrun bug?  (~1-3 sentences each)
+
+Filenames longer than FILENAMESIZ-1 overrun the filename buffer. Fixed by
+checking the
 
 # EXERCISE 2B: What other robustness problems did you fix?  (~1-3 sentences
 #    each)
