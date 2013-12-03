@@ -694,15 +694,7 @@ static void task_upload(task_t *t)
 	}
 	t->head = t->tail = 0;
 
-<<<<<<< HEAD
-  // EXERCISE 3: Evil mode will spam the downloader with junk information. 
-  
-  if(evil_mode != 0) {
-    while(1) 
-      osp2p_writef(t->peer_fd, "SPAM SPAM SPAM SPAM SPAM SPAM SPAM SPAM");
-  }
     
-=======
   //////////////////////////////////////////////////////////////////
   //EXERCISE 2B CONTINUED
   //check to make sure the filename itself is not too long
@@ -723,7 +715,12 @@ static void task_upload(task_t *t)
     }
   }
 
->>>>>>> e288c3ebd64db8a37eb14e6a3fdf3442df55fe7b
+  // EXERCISE 3: Evil mode will spam the downloader with junk information. 
+  
+  if(evil_mode != 0) {
+    while(1) 
+      osp2p_writef(t->peer_fd, "SPAM SPAM SPAM SPAM SPAM SPAM SPAM SPAM");
+  }
 
 	t->disk_fd = open(t->filename, O_RDONLY);
 	if (t->disk_fd == -1) {
